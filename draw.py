@@ -75,6 +75,10 @@ for filename in glob.glob(os.path.join('data', '*.fits')):
         lon_lat = np.vstack([lon, lat]).transpose()
         paths.append(get_lon_lat_path(ax, trans, lon_lat))
 
+    ax.add_collection(PathCollection(paths, edgecolors='purple', facecolors='none', alpha=0.4))
+
+    paths = []
+
     lat = np.linspace(wmin[1], wmax[1], N)
     for lonval in np.linspace(wmin[0], wmax[0], NG)[1:]:
         lon = np.repeat(lonval, N)
