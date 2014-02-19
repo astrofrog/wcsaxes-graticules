@@ -6,10 +6,10 @@ from matplotlib.patches import PathPatch
 from astropy.coordinates.angle_utilities import angular_separation
 
 # Tolerance for WCS round-tripping
-ROUND_TRIP_TOL = 1e-5
+ROUND_TRIP_TOL = 1e-1
 
 # Tolerance for discontinuities relative to the median
-DISCONT_FACTOR = 100.
+DISCONT_FACTOR = 10.
 
 
 def draw_lon_lat_curve(ax, transform, lon_lat):
@@ -50,14 +50,16 @@ def draw_lon_lat_curve(ax, transform, lon_lat):
     mask = np.abs(sep > ROUND_TRIP_TOL)
 
     # Mask values with invalid pixel positions
-    mask = mask | np.isnan(pixel[:, 0]) | ~np.isnan(pixel[:, 1])
+    mask = mask | np.isnan(pixel[:, 0]) | np.isnan(pixel[:, 1])
 
     # Mask values outside the viewport
-    mask = mask | pixel[:, 0] < xlim[0] | pixel[:, 0] > xlim[-1] \
-                | pixel[:, 1] < ylim[0] | pixel[:, 1] > ylim[-1]
+    mask = mask | ((pixel[:, 0] < xlim[0]) | (pixel[:, 0] > xlim[-1]) |
+                   (pixel[:, 1] < ylim[0]) | (pixel[:, 1] > ylim[-1]))
 
     # We can now start to set up the codes for the Path.
     codes = np.zeros(lon_lat.shape[0], dtype=np.uint8)
+    codes[:] = Path.LINETO
+    codes[0] = Path.MOVETO
     codes[mask] = Path.MOVETO
 
     # Also need to move to point *after* a hidden value
@@ -75,13 +77,18 @@ def draw_lon_lat_curve(ax, transform, lon_lat):
 
     # We search for discontinuities by looking for places where the step
     # is larger by more than a given factor compared to the median
-    discontinuous = step > DISCONT_FACTOR * np.median(step)
+    # discontinuous = step > DISCONT_FACTOR * np.median(step)
+    discontinuous = step[1:] > DISCONT_FACTOR * step[:-1]
 
     # Skip over discontinuities
-    codes[1:][discontinuous] = Path.MOVETO
+    codes[2:][discontinuous] = Path.MOVETO
+
+    # The above missed the first step, so check that too
+    if step[0] > DISCONT_FACTOR * step[1]:
+        codes[1] = Path.MOVETO
 
     # Create the path
-    path = Path(pixel, codes)
+    path = Path(pixel, codes=codes)
 
     # And add to the axes
-    ax.add_patch(PathPatch(path, color='b', alpha=0.4))
+    ax.add_patch(PathPatch(path, facecolor='none', edgecolor='b', alpha=0.4))
