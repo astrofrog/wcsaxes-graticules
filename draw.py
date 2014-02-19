@@ -109,7 +109,7 @@ for filename in glob.glob(os.path.join('data', '*.fits')):
 
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
-        fig.savefig(filename.replace('.fits', '_{0}_.png'.format(system)))
+        fig.savefig(filename.replace('.fits', '_{0}.png'.format(system)))
         plt.close(fig)
 
     axc.xaxis.set_visible(False)
