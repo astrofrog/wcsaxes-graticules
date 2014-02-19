@@ -23,19 +23,6 @@ class FITSWCSWrapper(object):
         return self.wcs.wcs_pix2world(pixel, 1)
 
 
-class PolarTrans(object):
-    def world2pix(self, r_theta):
-        r, theta = r_theta[:,0], r_theta[:,1]
-        x = r * np.cos(theta)
-        y = r * np.sin(theta)
-        return np.vstack([x, y]).transpose()
-    def pix2world(self, x_y):
-        x, y = x_y[:,0], x_y[:,1]
-        r = np.sqrt(x*x + y*y)
-        theta = np.atan2(y, x)
-        return np.vstack([r, theta]).transpose()
-
-
 for filename in glob.glob(os.path.join('data', '*.fits')):
 
     print(filename)
