@@ -52,8 +52,9 @@ def get_lon_lat_path(ax, transform, lon_lat):
     mask = mask | np.isnan(pixel[:, 0]) | np.isnan(pixel[:, 1])
 
     # Mask values outside the viewport
-    mask = mask | ((pixel[:, 0] < xlim[0]) | (pixel[:, 0] > xlim[-1]) |
-                   (pixel[:, 1] < ylim[0]) | (pixel[:, 1] > ylim[-1]))
+    outside = ((pixel[:, 0] < xlim[0]) | (pixel[:, 0] > xlim[-1]) |
+               (pixel[:, 1] < ylim[0]) | (pixel[:, 1] > ylim[-1]))
+    mask[1:-1] = mask[1:-1] | (outside[2:] & outside[:-2])
 
     # We can now start to set up the codes for the Path.
     codes = np.zeros(lon_lat.shape[0], dtype=np.uint8)
