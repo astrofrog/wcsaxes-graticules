@@ -51,8 +51,8 @@ for filename in glob.glob(os.path.join('data', '*.fits')):
     wcs = FITSWCSWrapper(WCS(header))
 
     # Set range of coordinates to draw grid
-    wmin = [-180., -90.]
-    wmax = [+180., +90.]
+    wmin = [-179.9999, -89.9999]
+    wmax = [+179.9999, +89.9999]
 
     # Set transformation
     trans = wcs
