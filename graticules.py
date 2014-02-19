@@ -1,6 +1,9 @@
-from astropy.coordinates.angle_utilities import angular_separation
+import numpy as np
+
 from matplotlib.lines import Path
 from matplotlib.patches import PathPatch
+
+from astropy.coordinates.angle_utilities import angular_separation
 
 # Tolerance for WCS round-tripping
 ROUND_TRIP_TOL = 1e-5
@@ -54,7 +57,7 @@ def draw_lon_lat_curve(ax, transform, lon_lat):
                 | pixel[:, 1] < ylim[0] | pixel[:, 1] > ylim[-1]
 
     # We can now start to set up the codes for the Path.
-    codes = np.zeros(lon_lat.shape[0], dtype=uint8)
+    codes = np.zeros(lon_lat.shape[0], dtype=np.uint8)
     codes[mask] = Path.MOVETO
 
     # Also need to move to point *after* a hidden value
