@@ -79,7 +79,7 @@ for filename in glob.glob(os.path.join('data', '*.fits')):
         ax.text(0.5, 0.9, os.path.basename(filename), ha='center', transform=ax.transAxes, size=18)
 
         if system == 'equ':
-            axc.text(0.5, 0.9, os.path.basename(filename), ha='center', transform=ax.transAxes, size=18)
+            axc.text(0.5, 0.9, os.path.basename(filename), ha='center', transform=axc.transAxes, size=18)
 
         # Define grid lines
         NG = 18
