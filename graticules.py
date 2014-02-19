@@ -1,7 +1,6 @@
 import numpy as np
 
 from matplotlib.lines import Path
-from matplotlib.patches import PathPatch
 
 from astropy.coordinates.angle_utilities import angular_separation
 
@@ -12,7 +11,7 @@ ROUND_TRIP_TOL = 1e-1
 DISCONT_FACTOR = 10.
 
 
-def draw_lon_lat_curve(ax, transform, lon_lat):
+def get_lon_lat_path(ax, transform, lon_lat):
     """
     Draw a curve, taking into account discontinuities.
 
@@ -91,4 +90,4 @@ def draw_lon_lat_curve(ax, transform, lon_lat):
     path = Path(pixel, codes=codes)
 
     # And add to the axes
-    ax.add_patch(PathPatch(path, facecolor='none', edgecolor='b', alpha=0.4))
+    return path

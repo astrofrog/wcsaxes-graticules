@@ -7,8 +7,9 @@ from astropy.wcs import WCS
 from astropy.io import fits
 
 import matplotlib.pyplot as plt
+from matplotlib.collections import PathCollection
 
-from graticules import draw_lon_lat_curve
+from graticules import get_lon_lat_path
 
 
 class FITSWCSWrapper(object):
@@ -65,18 +66,22 @@ for filename in glob.glob(os.path.join('data', '*.fits')):
     # Define grid lines
     NG = 18
     N = 1000
-    grid_lines = []
+
+    paths = []
+
     lon = np.linspace(wmin[0], wmax[0], N)
     for latval in np.linspace(wmin[1], wmax[1], NG):
         lat = np.repeat(latval, N)
         lon_lat = np.vstack([lon, lat]).transpose()
-        draw_lon_lat_curve(ax, trans, lon_lat)
+        paths.append(get_lon_lat_path(ax, trans, lon_lat))
 
     lat = np.linspace(wmin[1], wmax[1], N)
     for lonval in np.linspace(wmin[0], wmax[0], NG)[1:]:
         lon = np.repeat(lonval, N)
         lon_lat = np.vstack([lon, lat]).transpose()
-        draw_lon_lat_curve(ax, trans, lon_lat)
+        paths.append(get_lon_lat_path(ax, trans, lon_lat))
+
+    ax.add_collection(PathCollection(paths, edgecolors='b', facecolors='none', alpha=0.4))
 
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
