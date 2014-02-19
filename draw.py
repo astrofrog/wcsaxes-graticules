@@ -6,6 +6,8 @@ import numpy as np
 from astropy.wcs import WCS
 from astropy.io import fits
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.collections import PathCollection
 
